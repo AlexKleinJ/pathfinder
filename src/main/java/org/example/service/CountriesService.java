@@ -2,6 +2,7 @@ package org.example.service;
 
 import org.example.exception.NoRouteException;
 import org.example.model.Country;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import tools.jackson.core.type.TypeReference;
@@ -38,6 +39,7 @@ public class CountriesService {
                 .collect(toMap(Country::cca3, Country::borders));
     }
 
+    @Cacheable(value = "routes", key = "{ #origin,  #destination }")   // or key = "#root.methodName + #id"
     public List<String> findRoute(String origin, String destination) {
         LinkedList<String> countriesToVisit = new LinkedList<>();
         Map<String, String> previousCountries = new HashMap<>();
